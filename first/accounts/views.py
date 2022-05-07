@@ -18,7 +18,7 @@ class RegisterViewSet(viewsets.ViewSet):
         ser_data = RegisterSerializer(data=request.data)
         if ser_data.is_valid():
             ser_data.save()
-            return Response(data=ser_data.data, status=status.HTTP_201_CREATED)
+            return Response({'detail': User.sub_login(**ser_data.data)}, status=status.HTTP_201_CREATED)
         return Response(data=ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -28,8 +28,7 @@ class LoginViewSet(viewsets.ViewSet):
     def create(self, request):
         ser_data = LoginSerializer(data=request.data)
         if ser_data.is_valid():
-            ser_data.save()
-            return Response(data=ser_data.data, status=status.HTTP_200_OK)
+            return Response({'detail': User.login(**ser_data)}, status=status.HTTP_200_OK)
         return Response(data=ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ConfirmViewSet(viewsets.ViewSet):

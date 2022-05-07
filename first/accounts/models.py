@@ -26,6 +26,12 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
     @property
     def is_staff(self):
         return self.is_admin
@@ -38,7 +44,7 @@ class User(AbstractUser):
             'access': str(refresh.access_token),
         }
 
-    def login(username, phone_number):
+    def sub_login(username, phone_number):
         if cache.get(f'code_{phone_number}'):
             ttl = cache.ttl(f'code_{phone_number}')
             raise ValidationError(Messages.TTL_ERROR.value.format(ttl))
@@ -48,6 +54,16 @@ class User(AbstractUser):
         
         code = otp_code(f'code_{phone_number}', code, 60)
         return status.HTTP_200_OK, Messages.SEND_CODE.value
+
+    def login(self, password):
+        validate_password = self.check_password
+        if not validate_password:
+            raise ValidationError(Messages.INCORRECT_PASSWORD.value)
+        else:
+            cache.delete(self.pk)
+            return (status.HTTP_200_OK ,
+                    {'refresh': self.get_tokens_for_user()['refresh'],
+                     'access': self.get_tokens_for_user()['access']})
 
     def confirm(username, phone_number, code):
         if cache.get(f'username_{phone_number}') != username:
