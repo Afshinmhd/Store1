@@ -26,6 +26,10 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+    @property
+    def is_staff(self):
+        return self.is_admin
+
     def get_tokens_for_user(user):
         refresh = RefreshToken.for_user(user)
 
