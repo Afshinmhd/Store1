@@ -52,7 +52,8 @@ class User(AbstractUser):
             cache.set_many({f'phone_number_{phone_number}': phone_number,
                             f'username_{username}': username}, 300)
         
-        code = otp_code(f'code_{phone_number}', code, 60)
+        code = otp_code()
+        cache.set(f'code_{phone_number}', code, 60)
         return status.HTTP_200_OK, Messages.SEND_CODE.value
 
     def login(self, password):

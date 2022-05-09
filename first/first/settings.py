@@ -133,11 +133,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CACHES = {
-    'default': {
-        'BACKEND': os.environ.get('REDIS_BACKEND', 'django_redis.cache.RedisCache'),
-        'LOCATION': os.environ.get('REDIS_LOCATION', "redis://first_redis:6379/3"),
-        'TIMEOUT': os.environ.get('REDIS_TIMEOUT', '86400'),  # 1 day
-        'KEY_PREFIX': 'first',
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     }
 }
 
