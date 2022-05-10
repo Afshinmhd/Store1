@@ -7,7 +7,9 @@ from rest_framework.serializers import ValidationError
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
-    phone_number = serializers.SlugField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    
 
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(
