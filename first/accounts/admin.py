@@ -8,7 +8,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('username', 'phone_number', 'is_admin')
     list_filter = ('is_admin',)
     fieldsets = (
-        ('main', {'fields': ('email', 'phone_number', 'full_name', 'password')}),
+        ('main', {'fields': ('email', 'phone_number', 'password')}),
         ('permissions', {'fields': ('is_active', 'is_admin', 'is_superuser', 'last_login', 'groups', 'user_permissions')}),
     )
     

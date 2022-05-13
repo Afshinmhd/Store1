@@ -50,9 +50,10 @@ class User(AbstractUser):
             raise ValidationError(Messages.TTL_ERROR.value.format(ttl))
         elif not cache.get(f'username_{phone_number}'):
             cache.set_many({f'phone_number_{phone_number}': phone_number,
-                            f'username_{username}': username}, 300)
+                            f'username_{phone_number}': username}, 300)
         
         code = otp_code()
+        print(f'hellllo{code}')
         cache.set(f'code_{phone_number}', code, 60)
         return status.HTTP_200_OK, Messages.SEND_CODE.value
 
@@ -67,14 +68,14 @@ class User(AbstractUser):
                      'access': self.get_tokens_for_user()['access']})
 
     def confirm(username, phone_number, code):
-        if cache.get(f'username_{phone_number}') != username:
+        if not cache.get(f'username_{phone_number}') == username:
             raise ValidationError(Messages.EDIT_INFORMATION.value)
-        elif cache.get(f'code_{phone_number}') != code:
-            raise ValidationError(Messages.INCORRECT_CODE.value)
+        elif not cache.get(f'code_{phone_number}') == code:
+            raise ValidationError(Messages.INCORRECT_MOBILE.value)
         person = User.objects.get_or_create(
-            username=username, phone_number=phone_number, is_verified=True
-        )
-        cache.delete_many([person[0].pk, f'code_{phone_number}'])
-        return (status.HTTP_200_OK, {person[0].get_token_for_user()['refresh'],
-                person[0].get_token_for_user()['access']})
+            username=username, phone_number=phone_number)
+        cache.delete_many([person[0].pk,f'code_{code}'])
+        return(status.HTTP_200_OK,
+                {'refresh': person[0].get_tokens_for_user()['refresh'],
+                'access': person[0].get_tokens_for_user()['access']})
 

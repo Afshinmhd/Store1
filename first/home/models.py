@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
 
@@ -29,4 +30,16 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+class Comment(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,verbose_name='user',
+                            related_name='cuser')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='product',
+                                related_name='cproduct')
+    body = models.TextField(_('body'))
+    created = models.DateTimeField(_('created'), auto_now_add=True)
 
+    class Meta:
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f'{self.user}-{self.body[:40]}'

@@ -7,7 +7,7 @@ from rest_framework.serializers import ValidationError
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
-    password = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=True)
 
     
 
@@ -30,15 +30,9 @@ class RegisterSerializer(serializers.Serializer):
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
 
-class MobileVerificationSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True, max_length=55)
-    mobile_number = serializers.SlugField(required=True, max_length=11)
-    code = serializers.CharField(required=True)
 
-class EditUserSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name')
-
+class ConfirmSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    phone_number = serializers.SlugField(required=True, max_length=11)
+    code = serializers.CharField(required=True, max_length=5)
 
