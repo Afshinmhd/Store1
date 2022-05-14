@@ -15,14 +15,23 @@ Including another URLconf
 """
 from django.contrib                         import admin
 from django.urls                            import path,include
+from rest_framework_simplejwt.views         import TokenRefreshView
+from rest_framework.routers                 import DefaultRouter
+
+from home.urls                              import router as home_router
+from accounts.urls                          import router as accounts_router
+from orders.urls                            import router as orders_router
 
 
-
-
+router = DefaultRouter()
+router.registry.extend(accounts_router.registry)
+router.registry.extend(home_router.registry)
+router.registry.extend(orders_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('home/', include('home.urls')),
     path('orders/', include('orders.urls')),
 ]
