@@ -1,3 +1,4 @@
+import logging
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .managers import UserManager
@@ -10,11 +11,11 @@ from .messages import Messages
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
+logger = logging.getLogger(__name__)
+
 class User(AbstractUser):
-    email = models.EmailField(_('email'), max_length=255, unique=True)
     phone_number = models.CharField(_('phone_number'), max_length=11, unique=True, 
                                         null=True, blank=True)
-    is_active = models.BooleanField(_('is_active'), default=True)
     is_verified = models.BooleanField(_('is_verified'),default=True)
     is_admin = models.BooleanField(_('is_admin'),default=False)
 

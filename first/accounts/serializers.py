@@ -10,7 +10,6 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(required=True)
 
     
-
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(
         required=True, max_length=60,
@@ -32,7 +31,7 @@ class RegisterSerializer(serializers.Serializer):
 
 
 class ConfirmSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
-    phone_number = serializers.SlugField(required=True, max_length=11)
-    code = serializers.CharField(required=True, max_length=5)
+    username = serializers.CharField()
+    phone_number = serializers.SlugField(max_length=11)
+    code = serializers.CharField(max_length=5)
 
