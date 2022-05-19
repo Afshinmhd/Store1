@@ -1,13 +1,17 @@
 from rest_framework import serializers
-from .models import OrderItem, Order
+from .models import ProductCart
 
-
-class CartSerializer(serializers.ModelSerializer):
+class ProductCartSerializer(serializers.ModelSerializer):
+    cart = serializers.SlugRelatedField(slug_field ='id', read_only=True, many=False)
+    
     class Meta:
-        model = OrderItem
-        fields = ('quantity',)
+        model = ProductCart
+        fields = ['id', 'cart', 'product', 'quantity']
 
-class CartOrderSerializer(serializers.ModelSerializer):
+
+class EditProductCartSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = Order
-        fields = '__all__'
+        model = ProductCart
+        fields = ['id', 'cart', 'product', 'quantity']
+        read_only_fields = ['id', 'cart', 'product']

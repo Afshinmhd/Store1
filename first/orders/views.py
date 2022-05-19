@@ -1,36 +1,30 @@
-from .cart import Cart
-from home.models import Product
-from rest_framework import viewsets, status
+from common.pagination import CustomPagination
+from rest_framework import viewsets
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .serializers import CartSerializer, CartOrderSerializer
-from .models import Order, OrderItem
+from .serializers import ProductCartSerializer, EditProductCartSerializer
+from .models import Cart, ProductCart
 from accounts.models import User
 
 
-class CartAddViewSet(viewsets.ViewSet):
-     def create(self, request):
-         cart = Cart(request)
-         product = get_object_or_404(Product, pk=1)
-         ser_data = CartSerializer(data=request.data)
-         ser_data.is_valid(raise_exception=True)
-         cart.add(product, ser_data.validated_data['quantity'])
-         return Response(status=status.HTTP_201_CREATED)
+class OrderViewSet(viewsets.ModelViewSet):
+    permission_classes = []
+    pagination_class = CustomPagination
+    queryset = ProductCart.objects.select_related(
+        'cart__user').select_related('product')
+    http_method_names = ['post', 'get', 'patch', 'delete']
 
-class OrderCreateViewSet(viewsets.ViewSet):
-    def list(self, request, pk=None):
-        cart = Cart(request)
-        order = Order.objects.create(user=User.objects.get(is_admin=True))
-        for item in cart:
-            OrderItem.objects.create(order=order, product=item['product'], price=float(item['price']), quantity=item['quantity'])
-        return Response(status=status.HTTP_200_OK)
-
-class OrderDetailViewSet(viewsets.ViewSet):
-    def retrieve(self, request, pk=None):
-        order = get_object_or_404(Order, id=pk)
-        ser_data = CartOrderSerializer(instance=order)
-        return Response(data=ser_data.data, status=status.HTTP_200_OK)
-
-
-
-        
+    def get_queryset(self):
+        qs=super().get_queryset()
+        return qs.filter(cart__user=self.request.user)
+      
+    def get_serializer_class(self):
+        if self.action == 'partial_update':
+            return EditProductCartSerializer
+        return ProductCartSerializer  
+    
+    def perform_create(self, serializer):
+        user = self.request.user
+        cart = Cart.objects.get_or_create(user=user, enable=True)
+        serializer.validated_data.update(cart=cart[0])
+        super().perform_create(serializer) # associated to logs

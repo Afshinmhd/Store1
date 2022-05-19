@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from .serializers import ProductSerializer, ProductViewSerializer
 from .models import Product
-from common.pagination import CutsomPagination
+from common.pagination import CustomPagination
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAdminUser
 """
 class ProductViewSet(viewsets.ViewSet):
     permission_classes = []
-    pagination_class = CutsomPagination
+    pagination_class = CustomPagination
     queryset = Product.objects.all()
 
     def list(self, request):
@@ -45,7 +45,7 @@ class ProductViewSet(viewsets.ViewSet):
         """
 
 class ProductViewSet(viewsets.ModelViewSet):
-    pagination_class = CutsomPagination
+    pagination_class = CustomPagination
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
 
