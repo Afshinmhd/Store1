@@ -4,7 +4,6 @@ from rest_framework.routers import DefaultRouter
 from .views import ConfirmViewSet, RegisterViewSet, LoginViewSet, ConfirmViewSet
                     
 
-
 urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

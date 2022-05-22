@@ -18,11 +18,11 @@ class Product(models.Model):
     name = models.CharField(_('name'), max_length=100)
     slug = models.SlugField(_('slug'), max_length=100, unique=True)
     price = models.DecimalField(_('price'), max_digits=5, decimal_places=2)
-    image = models.ImageField(upload_to='media', null=True, blank=True)
-    description = models.TextField()
-    available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    image = models.ImageField(_('image'), upload_to='media', null=True, blank=True)
+    description = models.TextField(_('description'))
+    available = models.BooleanField(_('available'), default=True)
+    created = models.DateTimeField(_('created'), auto_now_add=True)
+    updated = models.DateTimeField(_('updated'), auto_now=True)
 
     class Meta:
         ordering = ('-updated',)

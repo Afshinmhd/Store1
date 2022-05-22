@@ -29,7 +29,8 @@ router.registry.extend(home_router.registry)
 router.registry.extend(orders_router.registry)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls), 
+    path('api/', include(router.urls)),
     path('accounts/', include('accounts.urls')),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('home/', include('home.urls')),

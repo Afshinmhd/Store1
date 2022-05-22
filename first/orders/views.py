@@ -1,14 +1,13 @@
 from common.pagination import CustomPagination
 from rest_framework import viewsets
-from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from .serializers import ProductCartSerializer, EditProductCartSerializer
 from .models import Cart, ProductCart
-from accounts.models import User
+
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
     queryset = ProductCart.objects.select_related(
         'cart__user').select_related('product')
