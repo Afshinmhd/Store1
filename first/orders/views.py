@@ -7,6 +7,25 @@ from .models import Cart, ProductCart
 
 
 class OrderViewSet(viewsets.ModelViewSet):
+    """
+    using this class for create, display, update and delete orders
+
+    Args:
+        arg1:int
+                id = user enter a number for id
+        arg2:int
+                cart = user enter a number for cart
+        arg3:int
+                product = user enter a number for product
+        arg4:int
+                quantity = user enter a number for quantity
+        -----------------------------
+        for update you can only send a number for quantity
+
+    Returns:
+        -----------------------
+        this return some data that include details of order
+    """
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
     queryset = ProductCart.objects.select_related(

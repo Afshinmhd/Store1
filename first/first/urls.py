@@ -14,9 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('accounts/', include('blog.urls'))
 """
 from django.contrib                         import admin
-from django.urls                            import path,include
+from django.urls                            import path, include, re_path
 from rest_framework_simplejwt.views         import TokenRefreshView
 from rest_framework.routers                 import DefaultRouter
+from common.swagger                         import schema_view
 
 from home.urls                              import router as home_router
 from accounts.urls                          import router as accounts_router
@@ -35,4 +36,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('home/', include('home.urls')),
     path('orders/', include('orders.urls')),
-]
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    ]

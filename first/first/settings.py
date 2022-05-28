@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_redis',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'drf-yasg',
 
     #first
     'accounts.apps.AccountsConfig',
