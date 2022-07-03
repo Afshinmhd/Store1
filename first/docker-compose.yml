@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+
+  store1_db:
+    container_name: store1_db
+    image: mdillon/postgis:11
+    restart: always
+
+  store1_api:
+    container_name: store1_api
+    build: .
+    restart: always
+    depends_on:
+      - store1_db
+      - store1_mongo
+    volumes:
+      - .:/app
+    ports:
+      - 9215:80
+    command: ["python", "/app/store1/manage.py", "runserver", "--settings=store1.settings.base", "0:80"]
+    environment:
+      DEBUG: 'True'
+
+  store1_celery:
+    container_name: store1_celery
+    build: .
+    working_dir: /app/store1
+    command: ["celery", "-A", "store1", "worker", "-l", "info"]
+    restart: always
+    volumes:
+      - .:/app
+    depends_on:
+      - store1_db
+      - store1_redis
+
+  store1_beat:
+    container_name: store1_beat
+    build: .
+    working_dir: /app/store1
+    command: ["celery", "-A", "store1", "beat", "-l", "info", "--pidfile=/tmp/celeryd.pid"]
+    restart: always
+    volumes:
+      - .:/app
+    depends_on:
+      - store1_db
+      - store1_redis
+
+  store1_redis:
+    container_name : store1_redis
+    image: redis:5.0.8
+    restart: always

@@ -1,4 +1,7 @@
 from django.db import models
+
+from django.conf import settings
+from .utils import product_image_path
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
@@ -17,8 +20,9 @@ class Product(models.Model):
     category = models.ManyToManyField(Category, verbose_name='category', related_name='products')
     name = models.CharField(_('name'), max_length=100)
     slug = models.SlugField(_('slug'), max_length=100, unique=True)
-    price = models.DecimalField(_('price'), max_digits=5, decimal_places=2)
-    image = models.ImageField(_('image'), upload_to='media', null=True, blank=True)
+    price = models.DecimalField(_('price'), max_digits=settings.MAX_DIGITS, 
+                                decimal_places=settings.DECIMAL_PLACES)
+    image = models.ImageField(_('image'), upload_to=product_image_path, null=True, blank=True)
     description = models.TextField(_('description'))
     available = models.BooleanField(_('available'), default=True)
     created = models.DateTimeField(_('created'), auto_now_add=True)

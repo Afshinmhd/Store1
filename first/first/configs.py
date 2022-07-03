@@ -1,0 +1,4 @@
+MAX_DIGITS = 5
+DECIMAL_PLACES = 2
+SUPPORTED_IMAGE_FORMAT = ['jpeg', 'jpg', 'png']
+
